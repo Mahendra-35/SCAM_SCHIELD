@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Aqua Farm Management System</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="AI Aqua Farm Management System - Intelligent Aquaculture Production, Water Quality AI Diagnostics, Fish Stocking, Feed Optimization, and Financial Yield Tracking.">
+    <meta name="keywords" content="aquaculture, fish farming, water quality, AI farm management, pond management, feed calculator, harvest tracker">
+    <meta name="author" content="AI Aqua Farm Systems">
+
+    <!-- Third-Party CSS & Fonts -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css">
+    
+    <!-- Third-Party JS (Chart.js via CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <div class="logo-icon"><i class="ri-water-flash-line"></i></div>
+                    <div class="logo-text">AI Aqua <span>Farm</span></div>
+                </div>
+                <button class="sidebar-toggle-btn" title="Collapse Sidebar"><i class="ri-menu-fold-line"></i></button>
+            </div>
+
+            <div class="sidebar-menu">
+                <div class="menu-category">Main Operations</div>
+                <div class="nav-item active" data-module="dashboard">
+                    <i class="ri-dashboard-line"></i>
+                    <span class="nav-text">Dashboard</span>
+                </div>
+                <div class="nav-item" data-module="ponds">
+                    <i class="ri-ruler-2-line"></i>
+                    <span class="nav-text">Pond Management</span>
+                </div>
+                <div class="nav-item" data-module="stock">
+                    <i class="ri-pulse-line"></i>
+                    <span class="nav-text">Fish Stocking</span>
+                </div>
+                <div class="nav-item" data-module="water">
+                    <i class="ri-drop-line"></i>
+                    <span class="nav-text">Water Quality & AI</span>
+                </div>
+                <div class="nav-item" data-module="feed">
+                    <i class="ri-restaurant-line"></i>
+                    <span class="nav-text">Feed Calculator</span>
+                </div>
+
+                <div class="menu-category">Health & Yield</div>
+                <div class="nav-item" data-module="disease">
+                    <i class="ri-health-book-line"></i>
+                    <span class="nav-text">Disease Logs</span>
+                </div>
+                <div class="nav-item" data-module="harvest">
+                    <i class="ri-shopping-basket-2-line"></i>
+                    <span class="nav-text">Harvest & Sales</span>
+                </div>
+                <div class="nav-item" data-module="reports">
+                    <i class="ri-file-chart-line"></i>
+                    <span class="nav-text">Analytics Reports</span>
+                </div>
+
+                <div class="menu-category">System</div>
+                <div class="nav-item" data-module="notifications">
+                    <i class="ri-notification-3-line"></i>
+                    <span class="nav-text">Notifications</span>
+                </div>
+                <div class="nav-item" data-module="profile">
+                    <i class="ri-user-settings-line"></i>
+                    <span class="nav-text">User Settings</span>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-snippet">
+                    <div class="user-avatar" id="user-snippet-avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-snippet-name">Administrator</div>
+                        <div class="user-role" id="user-snippet-role">Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area Wrapper -->
+        <main class="main-wrapper">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" title="Open Menu"><i class="ri-menu-line"></i></button>
+                    <h1 class="page-title" id="page-title">Farm Analytics Dashboard</h1>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                        <i class="ri-moon-line"></i>
+                    </button>
+                    <button class="notifications-btn" title="Alerts & Notifications">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="notification-badge" id="topbar-notif-badge" style="display:none;">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic View Container -->
+            <div class="content-area">
+
+                <!-- 1. DASHBOARD MODULE -->
+                <section id="view-dashboard" class="module-view active">
+                    <!-- AI Advisor Banner -->
+                    <div class="ai-advisor-banner">
+                        <div class="ai-badge-icon"><i class="ri-brain-line"></i></div>
+                        <div class="ai-content">
+                            <div class="ai-title">AI Water Quality Advisory & Action Engine</div>
+                            <div id="dash-ai-recs-container" class="ai-recommendations-list">
+                                <!-- Loaded via JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metric Cards Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card stat-info">
+                            <div class="stat-info-container">
+                                <span class="stat-label">Active Ponds</span>
+                                <span class="stat-value" id="dash-stat-ponds">4 / 4</span>
+                                <span class="stat-change positive"><i class="ri-checkbox-circle-line"></i> Fully Operational</span>
+                            </div>
+                            <div class="stat-icon"><i class="ri-ruler-2-line"></i></div>
+                        </div>
+
+                        <div class="stat-card stat-success">
+                            <div class="stat-info-container">
+                                <span class="stat-label">Total Biomass (Fish Count)</span>
+                                <span class="stat-value" id="dash-stat-biomass">0 kg</span>
+                                <span class="stat-change positive" id="dash-stat-fish">0 fish</span>
+                            </div>
+                            <div class="stat-icon"><i class="ri-pulse-line"></i></div>
+                        </div>
+
+                        <div class="stat-card stat-warning">
+                            <div class="stat-info-container">
+                                <span class="stat-label">Farm Health Score</span>
+                                <span class="stat-value" id="dash-stat-health">92 / 100</span>
+                                <span id="dash-health-badge" class="badge badge-success">Optimal</span>
+                            </div>
+                            <div class="stat-icon"><i class="ri-shield-cross-line"></i></div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-info-container">
+                                <span class="stat-label">Est. Daily Feed</span>
+                                <span class="stat-value" id="dash-stat-feed">0 kg / day</span>
+                                <span class="stat-change neutral">3.0% Ration</span>
+                            </div>
+                            <div class="stat-icon"><i class="ri-restaurant-line"></i></div>
+                        </div>
+
+                        <div class="stat-card stat-success">
+                            <div class="stat-info-container">
+                                <span class="stat-label">Net Profit YTD</span>
+                                <span class="stat-value" id="dash-stat-profit">$0</span>
+                                <span class="stat-change positive"><i class="ri-arrow-up-line"></i> Harvest Revenue</span>
+                            </div>
+                            <div class="stat-icon"><i class="ri-money-dollar-circle-line"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1.5rem; margin-bottom:1.75rem;">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title"><i class="ri-line-chart-line"></i> Water Quality Trends</h3>
+                                    <p class="card-subtitle">pH, Temperature, Dissolved Oxygen, and Ammonia parameters</p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="dashboard-water-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h3 class="card-title"><i class="ri-bar-chart-box-line"></i> Revenue vs Net Profit</h3>
+                                    <p class="card-subtitle">Financial yields from recent fish harvests</p>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="dashboard-financial-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Stream -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="ri-history-line"></i> Recent Farm Operations</h3>
+                        </div>
+                        <div id="dash-activities-list">
+                            <!-- Loaded via JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. POND MANAGEMENT MODULE -->
+                <section id="view-ponds" class="module-view">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="pond-search" placeholder="Search ponds by name or species...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-add-pond">
+                            <i class="ri-add-line"></i> Add New Pond
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pond Name</th>
+                                    <th>Surface Area</th>
+                                    <th>Depth</th>
+                                    <th>Water Capacity</th>
+                                    <th>Species Stocked</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ponds-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 3. FISH STOCK MODULE -->
+                <section id="view-stock" class="module-view">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="stock-search" placeholder="Search fish stock by species or batch...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-add-stock">
+                            <i class="ri-add-line"></i> Stock New Batch
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pond</th>
+                                    <th>Species</th>
+                                    <th>Fish Quantity</th>
+                                    <th>Avg Weight (g)</th>
+                                    <th>Est. Biomass (kg)</th>
+                                    <th>Stocking Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 4. WATER QUALITY LOGS & AI MODULE -->
+                <section id="view-water" class="module-view">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="water-search" placeholder="Search water quality logs...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-add-water">
+                            <i class="ri-drop-line"></i> Record Water Log
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Pond</th>
+                                    <th>pH</th>
+                                    <th>Temp (°C)</th>
+                                    <th>DO (mg/L)</th>
+                                    <th>Salinity (ppt)</th>
+                                    <th>Ammonia (mg/L)</th>
+                                    <th>AI Diagnosis</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="water-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 5. FEED CALCULATOR MODULE -->
+                <section id="view-feed" class="module-view">
+                    <div class="card" style="margin-bottom: 1.5rem;">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="ri-calculator-line"></i> Smart Daily Feed Calculator</h3>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Select Pond</label>
+                                <select id="calc-pond-select" class="form-control">
+                                    <!-- Loaded via JS -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Total Fish Count</label>
+                                <input type="number" id="calc-fish-count" class="form-control" value="15000">
+                            </div>
+                            <div class="form-group">
+                                <label>Average Fish Weight (grams)</label>
+                                <input type="number" id="calc-avg-weight" class="form-control" value="280">
+                            </div>
+                            <div class="form-group">
+                                <label>Feed Ration Rate (% of body weight)</label>
+                                <input type="number" id="calc-feed-rate" class="form-control" step="0.1" value="3.0">
+                            </div>
+                        </div>
+
+                        <!-- Calculation Results Output Banner -->
+                        <div style="background:var(--bg-tertiary); padding:1.25rem; border-radius:var(--radius-md); margin-top:1rem;">
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; text-align:center;">
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">TOTAL BIOMASS</div>
+                                    <div style="font-size:1.4rem; font-weight:700; color:var(--brand-primary);" id="calc-result-biomass">4,200 kg</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">DAILY FEED REQUIRED</div>
+                                    <div style="font-size:1.4rem; font-weight:700; color:var(--success);" id="calc-result-daily">126.0 kg</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">MORNING (40%)</div>
+                                    <div style="font-size:1.1rem; font-weight:600;" id="calc-result-morning">50.4 kg</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">AFTERNOON (30%)</div>
+                                    <div style="font-size:1.1rem; font-weight:600;" id="calc-result-afternoon">37.8 kg</div>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700;">EVENING (30%)</div>
+                                    <div style="font-size:1.1rem; font-weight:600;" id="calc-result-evening">37.8 kg</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right; margin-top:1rem;">
+                                <button class="btn btn-primary" id="btn-log-feed-calc"><i class="ri-save-line"></i> Save Feeding Log Entry</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Feed Log History Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="ri-history-line"></i> Daily Feeding Ration History</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Pond</th>
+                                        <th>Feed Type/Brand</th>
+                                        <th>Quantity Fed</th>
+                                        <th>Ration Rate %</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feed-logs-table-body">
+                                    <!-- Loaded via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. DISEASE MANAGEMENT MODULE -->
+                <section id="view-disease" class="module-view">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="disease-search" placeholder="Search disease logs or symptoms...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-add-disease">
+                            <i class="ri-health-book-line"></i> Report Health Issue
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Pond</th>
+                                    <th>Disease Name</th>
+                                    <th>Symptoms</th>
+                                    <th>Treatment Applied</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="disease-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 7. HARVEST MANAGEMENT MODULE -->
+                <section id="view-harvest" class="module-view">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="harvest-search" placeholder="Search harvest sales records...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-add-harvest">
+                            <i class="ri-shopping-basket-2-line"></i> Record New Harvest
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Harvest Date</th>
+                                    <th>Pond</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Price / kg</th>
+                                    <th>Gross Revenue</th>
+                                    <th>Expenses</th>
+                                    <th>Net Profit</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="harvest-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 8. REPORTS MODULE -->
+                <section id="view-reports" class="module-view">
+                    <div class="toolbar">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <label style="font-weight:600;">Report Type:</label>
+                            <select id="report-type-select" class="form-control" style="width:auto;">
+                                <option value="all">Consolidated Farm Summary</option>
+                                <option value="water">Water Quality Logs Summary</option>
+                                <option value="harvest">Harvest & Financial Summary</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button class="btn btn-outline" id="btn-print-report"><i class="ri-printer-line"></i> Print</button>
+                            <button class="btn btn-success" id="btn-export-csv"><i class="ri-download-line"></i> Export CSV</button>
+                        </div>
+                    </div>
+
+                    <!-- Summary Metric Cards -->
+                    <div class="stats-grid" id="report-summary-cards">
+                        <!-- Loaded via JS -->
+                    </div>
+
+                    <!-- Report Table -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Date / Context</th>
+                                    <th>Key Indicators</th>
+                                    <th>Status / Outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body">
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 9. NOTIFICATIONS MODULE -->
+                <section id="view-notifications" class="module-view">
+                    <div class="toolbar">
+                        <h3>System Alerts & Operations Log</h3>
+                        <button class="btn btn-outline" id="btn-mark-all-read">Mark All as Read</button>
+                    </div>
+
+                    <div id="notifications-list-container">
+                        <!-- Loaded via JS -->
+                    </div>
+                </section>
+
+                <!-- 10. USER PROFILE & SETTINGS MODULE -->
+                <section id="view-profile" class="module-view">
+                    <div class="card" style="max-width: 650px; margin: 0 auto;">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="ri-user-line"></i> User Profile & Access Control</h3>
+                            <span id="profile-role-badge" class="badge badge-danger">Admin</span>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem;">
+                            <div id="profile-avatar" style="width:64px; height:64px; border-radius:var(--radius-full); background:linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); color:white; font-size:1.8rem; font-weight:700; display:flex; align-items:center; justify-content:center;">A</div>
+                            <div>
+                                <h3 id="profile-display-name">Farm Administrator</h3>
+                                <p id="profile-email" style="color:var(--text-muted); font-size:0.9rem;">admin@aquafarm.ai</p>
+                            </div>
+                        </div>
+
+                        <div style="border-top:1px solid var(--border-light); padding-top:1.25rem;">
+                            <h4 style="margin-bottom:0.75rem;"><i class="ri-shield-keyhole-line"></i> Firebase & Cloud Database Status</h4>
+                            <div id="profile-fb-status" style="margin-bottom:1rem;">
+                                <!-- Status badge -->
+                            </div>
+                            <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1rem;">
+                                Firebase credentials are configured in <code style="background:var(--bg-tertiary); padding:0.2rem 0.4rem; border-radius:4px;">js/firebase-config.js</code>. The system runs seamlessly on GitHub Pages in Local Demo Mode if live Firebase credentials are not attached.
+                            </p>
+                        </div>
+
+                        <div style="border-top:1px solid var(--border-light); padding-top:1.25rem; display:flex; justify-content:space-between; align-items:center;">
+                            <button class="btn btn-outline" onclick="uiManager.openModal('fb-config-modal')"><i class="ri-settings-4-line"></i> Edit Credentials</button>
+                            <button class="btn btn-danger" id="btn-profile-logout"><i class="ri-logout-box-r-line"></i> Sign Out</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================================================== -->
+    <!-- MODAL DIALOGS                                                              -->
+    <!-- ========================================================================== -->
+
+    <!-- AUTHENTICATION MODAL -->
+    <!-- AUTHENTICATION MODAL (EMAIL & PASSWORD VERIFICATION) -->
+    <div class="modal-backdrop" id="auth-modal">
+        <div class="modal" style="max-width: 440px;">
+            <div class="modal-header" style="text-align:center; justify-content:center; flex-direction:column; gap:0.3rem;">
+                <div style="width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg, var(--brand-primary), var(--brand-secondary)); color:white; display:inline-flex; align-items:center; justify-content:center; font-size:1.5rem;">
+                    <i class="ri-shield-keyhole-line"></i>
+                </div>
+                <h3 class="modal-title">AI Aqua Farm Portal</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted);">Email & Password Authentication</p>
+            </div>
+            <div class="modal-body">
+                <!-- Login View -->
+                <div id="auth-login-view">
+                    <form id="auth-login-form">
+                        <div class="form-group">
+                            <label><i class="ri-mail-line"></i> Email Address</label>
+                            <input type="email" id="login-email" class="form-control" required placeholder="name@aquafarm.ai" value="admin@aquafarm.ai">
+                        </div>
+                        <div class="form-group">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <label><i class="ri-lock-password-line"></i> Password</label>
+                                <a href="#" id="link-show-forgot" style="font-size:0.78rem; color:var(--brand-primary);">Forgot Password?</a>
+                            </div>
+                            <input type="password" id="login-password" class="form-control" required placeholder="••••••••" value="password123">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; padding:0.75rem;">
+                            <i class="ri-login-box-line"></i> Sign In with Email
+                        </button>
+                    </form>
+                    
+                    <div style="margin-top:1.25rem; text-align:center; font-size:0.88rem;">
+                        New farm operator? <a href="#" id="link-show-register" style="font-weight:600; color:var(--brand-primary);">Create Account</a>
+                    </div>
+                </div>
+
+                <!-- Registration View -->
+                <div id="auth-register-view" style="display:none;">
+                    <form id="auth-register-form">
+                        <div class="form-group">
+                            <label><i class="ri-user-line"></i> Full Name</label>
+                            <input type="text" id="reg-name" class="form-control" required placeholder="Dr. Alex Mercer">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="ri-mail-line"></i> Email Address</label>
+                            <input type="email" id="reg-email" class="form-control" required placeholder="user@aquafarm.ai">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="ri-lock-password-line"></i> Password (Min. 6 characters)</label>
+                            <input type="password" id="reg-password" class="form-control" required placeholder="••••••••" minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="ri-checkbox-circle-line"></i> Confirm Password</label>
+                            <input type="password" id="reg-confirm-password" class="form-control" required placeholder="••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="ri-shield-user-line"></i> Role Access</label>
+                            <select id="reg-role" class="form-control">
+                                <option value="Farmer">Farmer (Daily Logging)</option>
+                                <option value="Admin">Admin (Full System Access)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; padding:0.75rem;">
+                            <i class="ri-mail-send-line"></i> Register & Send Verification Link
+                        </button>
+                    </form>
+
+                    <div style="margin-top:1.25rem; text-align:center; font-size:0.88rem;">
+                        Already registered? <a href="#" id="link-show-login" style="font-weight:600; color:var(--brand-primary);">Sign In</a>
+                    </div>
+                </div>
+
+                <!-- Password Reset View -->
+                <div id="auth-forgot-view" style="display:none;">
+                    <h4 style="margin-bottom:0.5rem; font-size:1rem;">Password Reset Verification</h4>
+                    <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">
+                        Enter your registered email address to receive a secure password reset link.
+                    </p>
+                    <form id="auth-forgot-form">
+                        <div class="form-group">
+                            <label><i class="ri-mail-line"></i> Registered Email</label>
+                            <input type="email" id="forgot-email" class="form-control" required placeholder="user@aquafarm.ai">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem; padding:0.75rem;">
+                            <i class="ri-send-plane-line"></i> Send Reset Link
+                        </button>
+                    </form>
+                    <div style="margin-top:1.25rem; text-align:center; font-size:0.88rem;">
+                        <a href="#" id="link-forgot-to-login" style="color:var(--text-secondary);"><i class="ri-arrow-left-line"></i> Back to Sign In</a>
+                    </div>
+                </div>
+
+                <!-- Email Verification Notice View -->
+                <div id="auth-verify-view" style="display:none; text-align:center; padding:0.5rem 0;">
+                    <div style="width:60px; height:60px; border-radius:50%; background:var(--info-light); color:var(--info); display:inline-flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:1rem;">
+                        <i class="ri-mail-check-line"></i>
+                    </div>
+                    <h4 style="margin-bottom:0.5rem;">Email Verification Sent</h4>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1.25rem; line-height:1.4;">
+                        A verification email has been dispatched via Firebase. Please open your email inbox and click the verification link.
+                    </p>
+                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                        <button class="btn btn-primary btn-sm" id="btn-verify-continue">Continue to App</button>
+                        <button class="btn btn-outline btn-sm" id="btn-resend-verify"><i class="ri-refresh-line"></i> Resend Verification Email</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POND MODAL -->
+    <div class="modal-backdrop" id="pond-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="pond-modal-title">Add New Aqua Pond</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="pond-form">
+                <div class="modal-body">
+                    <input type="hidden" id="pond-id">
+                    <div class="form-group">
+                        <label>Pond Name / Tag</label>
+                        <input type="text" id="pond-name" class="form-control" required placeholder="e.g. Pond Alpha 01">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Surface Area (m²)</label>
+                            <input type="number" id="pond-area" class="form-control" required step="1" oninput="pondsModule.autoCalcCapacity()">
+                        </div>
+                        <div class="form-group">
+                            <label>Average Depth (m)</label>
+                            <input type="number" id="pond-depth" class="form-control" required step="0.1" value="2.0" oninput="pondsModule.autoCalcCapacity()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Water Capacity (Liters)</label>
+                        <input type="number" id="pond-capacity" class="form-control" required placeholder="Auto-calculated from area & depth">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fish Species Stocked</label>
+                            <select id="pond-species" class="form-control">
+                                <option value="Nile Tilapia">Nile Tilapia</option>
+                                <option value="Pangasius Catfish">Pangasius Catfish</option>
+                                <option value="Whiteleg Shrimp">Whiteleg Shrimp</option>
+                                <option value="Asian Seabass">Asian Seabass</option>
+                                <option value="Rainbow Trout">Rainbow Trout</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Operational Status</label>
+                            <select id="pond-status" class="form-control">
+                                <option value="Active">Active</option>
+                                <option value="Harvesting">Harvesting</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Fallow">Fallow</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes / Equipment</label>
+                        <textarea id="pond-notes" class="form-control" rows="2" placeholder="e.g. Equipped with 2 HP aerator"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Pond</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- STOCK MODAL -->
+    <div class="modal-backdrop" id="stock-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="stock-modal-title">Stock New Fish Batch</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="stock-form">
+                <div class="modal-body">
+                    <input type="hidden" id="stock-id">
+                    <div class="form-group">
+                        <label>Target Pond</label>
+                        <select id="stock-pond-id" class="form-control">
+                            <!-- Loaded via JS -->
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Species</label>
+                            <select id="stock-species" class="form-control">
+                                <option value="Nile Tilapia">Nile Tilapia</option>
+                                <option value="Pangasius Catfish">Pangasius Catfish</option>
+                                <option value="Whiteleg Shrimp">Whiteleg Shrimp</option>
+                                <option value="Asian Seabass">Asian Seabass</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Quantity (pcs)</label>
+                            <input type="number" id="stock-quantity" class="form-control" required value="10000">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Average Weight per Fish (grams)</label>
+                            <input type="number" id="stock-avg-weight" class="form-control" step="0.1" required value="150">
+                        </div>
+                        <div class="form-group">
+                            <label>Stocking Date</label>
+                            <input type="date" id="stock-date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Batch No / Hatchery Reference</label>
+                        <input type="text" id="stock-batch" class="form-control" placeholder="e.g. BATCH-2026-05">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Stock Batch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WATER QUALITY LOG MODAL -->
+    <div class="modal-backdrop" id="water-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="water-modal-title">Record Water Quality Log</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="water-form">
+                <div class="modal-body">
+                    <input type="hidden" id="water-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pond</label>
+                            <select id="water-pond-id" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Timestamp</label>
+                            <input type="text" id="water-timestamp" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>pH Level</label>
+                            <input type="number" id="water-ph" class="form-control" step="0.1" required value="7.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Temperature (°C)</label>
+                            <input type="number" id="water-temp" class="form-control" step="0.1" required value="28.0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Dissolved Oxygen (mg/L)</label>
+                            <input type="number" id="water-do" class="form-control" step="0.1" required value="6.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Salinity (ppt)</label>
+                            <input type="number" id="water-salinity" class="form-control" step="0.1" value="0.5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ammonia (mg/L)</label>
+                            <input type="number" id="water-ammonia" class="form-control" step="0.01" required value="0.02">
+                        </div>
+                        <div class="form-group">
+                            <label>Nitrite (mg/L)</label>
+                            <input type="number" id="water-nitrite" class="form-control" step="0.01" value="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Remarks / Weather Observations</label>
+                        <input type="text" id="water-remarks" class="form-control" placeholder="e.g. Clear sunny morning">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Water Quality Log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DISEASE MODAL -->
+    <div class="modal-backdrop" id="disease-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="disease-modal-title">Report Disease / Health Observation</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="disease-form">
+                <div class="modal-body">
+                    <input type="hidden" id="disease-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pond</label>
+                            <select id="disease-pond-id" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date Observed</label>
+                            <input type="date" id="disease-date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Disease Name / Suspected Infection</label>
+                        <input type="text" id="disease-name" class="form-control" required placeholder="e.g. White Spot Disease">
+                    </div>
+                    <div class="form-group">
+                        <label>Symptoms</label>
+                        <textarea id="disease-symptoms" class="form-control" rows="2" required placeholder="e.g. Erratic swimming, visible lesions"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Treatment Administered</label>
+                        <textarea id="disease-treatment" class="form-control" rows="2" placeholder="e.g. Probiotic dosing & water exchange"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Resolution Status</label>
+                        <select id="disease-status" class="form-control">
+                            <option value="Active">Active (Under Treatment)</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Symptom Photo (Optional)</label>
+                        <input type="file" id="disease-image-file" class="form-control" accept="image/*">
+                        <div id="disease-image-preview-container" style="margin-top:0.5rem; display:none;">
+                            <img id="disease-image-preview" src="" style="max-width:100%; max-height:160px; border-radius:var(--radius-md);">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- HARVEST MODAL -->
+    <div class="modal-backdrop" id="harvest-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="harvest-modal-title">Record Harvest Sales</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <form id="harvest-form">
+                <div class="modal-body">
+                    <input type="hidden" id="harvest-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pond</label>
+                            <select id="harvest-pond-id" class="form-control"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Harvest Date</label>
+                            <input type="date" id="harvest-date" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Harvest Weight (kg)</label>
+                            <input type="number" id="harvest-weight" class="form-control" step="1" required value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Selling Price per kg ($)</label>
+                            <input type="number" id="harvest-price" class="form-control" step="0.01" required value="5.50">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Gross Revenue ($)</label>
+                            <input type="number" id="harvest-revenue" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Expenses / Feed Cost ($)</label>
+                            <input type="number" id="harvest-expenses" class="form-control" step="1" value="1500">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Net Profit ($)</label>
+                        <input type="number" id="harvest-profit" class="form-control" readonly style="font-weight:700; color:var(--success);">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer / Trader Information</label>
+                        <input type="text" id="harvest-buyer" class="form-control" placeholder="e.g. OceanFresh Logistics">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Harvest Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI DIAGNOSIS REPORT MODAL -->
+    <div class="modal-backdrop" id="ai-diagnosis-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="ri-brain-line"></i> AI Water Quality Diagnostic Advisory</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body" id="ai-dialog-content">
+                <!-- Content injected dynamically via AI Engine -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Acknowledge & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMAGE VIEWER MODAL -->
+    <div class="modal-backdrop" id="image-viewer-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Health Observation Photo</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <img id="image-viewer-src" src="" style="max-width:100%; max-height:70vh; border-radius:var(--radius-md);">
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE CONFIG MODAL -->
+    <div class="modal-backdrop" id="fb-config-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="ri-settings-4-line"></i> Firebase Cloud Credentials</h3>
+                <button class="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1rem;">
+                    To connect live Firebase Authentication & Cloud Firestore, enter your project details below or edit <code style="background:var(--bg-tertiary); padding:0.2rem;">js/firebase-config.js</code>.
+                </p>
+                <div class="form-group">
+                    <label>Firebase API Key</label>
+                    <input type="text" id="cfg-api-key" class="form-control" placeholder="AIzaSy...">
+                </div>
+                <div class="form-group">
+                    <label>Firebase Project ID</label>
+                    <input type="text" id="cfg-project-id" class="form-control" placeholder="your-aqua-farm">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-save-fb-config">Save Credentials</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <!-- Firebase Web SDK v10 (Compat CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+    <!-- Application JavaScript Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/ai-engine.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/modules/dashboard.js"></script>
+    <script src="js/modules/ponds.js"></script>
+    <script src="js/modules/stock.js"></script>
+    <script src="js/modules/water.js"></script>
+    <script src="js/modules/feed.js"></script>
+    <script src="js/modules/disease.js"></script>
+    <script src="js/modules/harvest.js"></script>
+    <script src="js/modules/reports.js"></script>
+    <script src="js/modules/notifications.js"></script>
+    <script src="js/modules/profile.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
