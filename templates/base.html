@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ScamShield — Online Scam Awareness & Risk Checker{% endblock %}</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Cybersecurity Styling -->
+    <link rel="stylesheet" href="{% static 'css/scamshield.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-cyber sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <i class="bi bi-shield-lock-fill text-cyan fs-3 me-2"></i>
+                <span>Scam<span class="text-white">Shield</span></span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav me-auto ms-lg-4 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'checker' %}active{% endif %}" href="{% url 'checker' %}">
+                            <i class="bi bi-search me-1"></i> Scam Checker
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'awareness' %}active{% endif %}" href="{% url 'awareness' %}">
+                            <i class="bi bi-book me-1"></i> Learn About Scams
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'report_incident' %}active{% endif %}" href="{% url 'report_incident' %}">
+                            <i class="bi bi-flag me-1"></i> Report Incident
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-cyber-outline me-1">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                        {% if user.is_staff or user.is_superuser %}
+                            <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-warning me-1">
+                                <i class="bi bi-gear-wide-connected me-1"></i> Admin Panel
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-sm btn-cyber-outline">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-sm btn-cyber-primary">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Toast Container -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;"></div>
+
+    <!-- Django Messages Alert -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show glass-card text-white border-0" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-secondary">
+        <div class="container text-center text-md-start">
+            <div class="row gy-3">
+                <div class="col-md-5">
+                    <h5 class="text-white d-flex align-items-center">
+                        <i class="bi bi-shield-lock-fill text-cyan me-2"></i> ScamShield
+                    </h5>
+                    <p class="small text-muted mb-2">
+                        Online Scam Awareness & Risk Analysis Platform. Empowering users with automated pattern recognition, threat indicators, and actionable safety guidance.
+                    </p>
+                    <p class="small text-muted">
+                        Final Year B.Tech Computer Science & Engineering Capstone Project.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white mb-2">Quick Navigation</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li><a href="{% url 'checker' %}" class="text-secondary text-decoration-none">Scam Risk Checker</a></li>
+                        <li><a href="{% url 'awareness' %}" class="text-secondary text-decoration-none">Educational Hub</a></li>
+                        <li><a href="{% url 'report_incident' %}" class="text-secondary text-decoration-none">Report Suspicious Activity</a></li>
+                        <li><a href="{% url 'about' %}" class="text-secondary text-decoration-none">About Project</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-2">Legal & Privacy</h6>
+                    <ul class="list-unstyled small mb-2">
+                        <li><a href="{% url 'privacy' %}" class="text-secondary text-decoration-none">Privacy Notice</a></li>
+                        <li><a href="{% url 'terms' %}" class="text-secondary text-decoration-none">Terms of Service</a></li>
+                    </ul>
+                    <div class="p-2 rounded bg-dark border border-secondary small text-muted">
+                        <i class="bi bi-exclamation-octagon text-warning me-1"></i>
+                        <strong>Disclaimer:</strong> Automated analysis results are informational risk indicators, not definitive proof of fraud or safety.
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary my-3">
+            <div class="d-flex justify-content-between align-items-center small text-muted">
+                <span>&copy; 2026 ScamShield. All rights reserved.</span>
+                <span>Cybersecurity Awareness System</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

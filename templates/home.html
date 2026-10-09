@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ScamShield — Think Before You Trust{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="py-5 text-center position-relative overflow-hidden">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <span class="badge bg-dark text-cyan border border-cyan px-3 py-2 rounded-pill mb-3">
+                    <i class="bi bi-shield-check me-1"></i> Automated Cyber Risk & Scam Detection Engine
+                </span>
+                <h1 class="display-3 fw-bold text-white mb-3">
+                    Think Before You <span class="text-cyan">Trust.</span>
+                </h1>
+                <p class="lead text-secondary mb-4 mx-auto" style="max-width: 750px;">
+                    ScamShield analyzes suspicious online job offers, email phishing links, banking SMS messages, and financial schemes to expose hidden red flags before you click or pay.
+                </p>
+                <div class="d-flex justify-content-center gap-3 mb-5">
+                    <a href="{% url 'checker' %}" class="btn btn-cyber-primary btn-lg">
+                        <i class="bi bi-search me-2"></i> Check for Scam Signs
+                    </a>
+                    <a href="{% url 'awareness' %}" class="btn btn-cyber-outline btn-lg">
+                        <i class="bi bi-book me-2"></i> Learn About Scams
+                    </a>
+                </div>
+
+                <!-- System Stats Bar -->
+                <div class="row g-3 justify-content-center mt-2">
+                    <div class="col-md-3 col-6">
+                        <div class="glass-card p-3">
+                            <h3 class="text-cyan fw-bold mb-0">{{ total_scans }}</h3>
+                            <span class="small text-muted">Analyses Conducted</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="glass-card p-3">
+                            <h3 class="text-danger fw-bold mb-0">{{ high_risk_caught }}</h3>
+                            <span class="small text-muted">High Risk Flags Caught</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="glass-card p-3">
+                            <h3 class="text-success fw-bold mb-0">{{ total_reports }}</h3>
+                            <span class="small text-muted">Community Reports</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-white">How ScamShield Works</h2>
+            <p class="text-secondary">Three quick steps to evaluate suspicious messages and web links</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="step-number">1</div>
+                    <h5 class="text-white fw-bold mb-2">Submit Content</h5>
+                    <p class="text-secondary small mb-0">
+                        Paste suspicious text, emails, job offers, SMS messages, or website URLs into our risk checker.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="step-number">2</div>
+                    <h5 class="text-white fw-bold mb-2">Pattern Analysis</h5>
+                    <p class="text-secondary small mb-0">
+                        Our contextual rule engine inspects domain structures, payment demands, pressure language, and credential requests.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 text-center h-100">
+                    <div class="step-number">3</div>
+                    <h5 class="text-white fw-bold mb-2">Review & Protect</h5>
+                    <p class="text-secondary small mb-0">
+                        Receive a transparent risk score (0-100), detailed warning sign explanations, and safe verification steps.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Supported Scam Categories -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-white">Supported Scam Categories</h2>
+            <p class="text-secondary">Comprehensive protection across common digital threat vectors</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-3 h-100 d-flex align-items-center">
+                    <div class="p-3 bg-dark text-cyan rounded-3 me-3 fs-3">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Job & Internship Scams</h6>
+                        <span class="small text-muted">Upfront fees & fake offers</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-3 h-100 d-flex align-items-center">
+                    <div class="p-3 bg-dark text-cyan rounded-3 me-3 fs-3">
+                        <i class="bi bi-envelope-exclamation-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Phishing & SMS</h6>
+                        <span class="small text-muted">Fake bank & service links</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-3 h-100 d-flex align-items-center">
+                    <div class="p-3 bg-dark text-cyan rounded-3 me-3 fs-3">
+                        <i class="bi bi-bank2"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">OTP & Banking</h6>
+                        <span class="small text-muted">Credential & PIN requests</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-3 h-100 d-flex align-items-center">
+                    <div class="p-3 bg-dark text-cyan rounded-3 me-3 fs-3">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-1">Fake Investments</h6>
+                        <span class="small text-muted">Guaranteed daily profits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQs Accordion -->
+<section class="py-5 bg-dark">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-white">Frequently Asked Questions</h2>
+            <p class="text-secondary">Learn how automated scam risk checking works</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush" id="faqAccordion">
+                    <div class="accordion-item glass-card mb-3 border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-transparent text-white collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                Does ScamShield guarantee 100% whether something is safe or a scam?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                No. ScamShield provides an automated risk assessment based on known pattern rules, domain structures, and contextual indicators. Automated analysis cannot guarantee 100% safety or fraud. Always verify important financial or personal requests directly with official organizations.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item glass-card mb-3 border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-transparent text-white collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Is my submitted message kept private?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                Yes! ScamShield is designed with privacy-first principles. We do not store full raw messages by default; only truncated sanitized previews and indicator metadata are preserved for statistical and personal history purposes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item glass-card mb-3 border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-transparent text-white collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Do I need to register to check a message?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                No! Anyone can use the core Scam Risk Checker free without creating an account. Creating an account allows you to track your scan history and view personal analytics.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

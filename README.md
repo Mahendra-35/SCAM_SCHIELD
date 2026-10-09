@@ -1,92 +1,162 @@
-# AI Aqua Farm Management System 🐟🌊
+# 🛡️ ScamShield — Online Scam Awareness & Risk Checker
 
-A complete, modern, production-ready, and responsive web application designed for aquaculture producers, fish farm managers, and environmental specialists. The system integrates **Firebase Authentication**, **Cloud Firestore**, and **Firebase Storage** with a rule-based **AI Water Quality Advisory Engine**, Chart.js visualizations, smart feeding calculators, disease logs, harvest profitability tracking, and role-based access control.
+**ScamShield** is a production-ready, full-stack cybersecurity web application built for online scam awareness, digital threat detection, and automated risk checking.
 
----
-
-## 🌟 Key Features & Modules
-
-1. **Firebase Authentication & RBAC**:
-   - User registration, email/password login, role selection (**Admin** vs **Farmer**), and sign-out.
-   - Admin role grants full system CRUD privileges; Farmer role provides daily operational logging and read/write capabilities.
-   - Quick one-click demo login buttons included for instant evaluation.
-
-2. **Isolated Firebase Configuration & GitHub Pages Ready**:
-   - All credentials isolated in `js/firebase-config.js`.
-   - Built-in fallback/demo mode automatically activates when live credentials are not present, allowing instant deployment on GitHub Pages or local web servers out of the box!
-
-3. **Analytics Dashboard**:
-   - Dynamic KPI summary cards (Active Ponds, Fish Biomass, Farm Health Index, Estimated Daily Feed, Net Profit YTD).
-   - Real-time Chart.js graphs for water quality parameter trends and financial yields.
-   - AI Advisory status banner and recent activity stream.
-
-4. **Pond Management**:
-   - Full CRUD operations with attributes: Pond Name, Surface Area ($m^2$), Depth ($m$), Water Capacity ($L$), Species Stocked, Operational Status, and Equipment Notes.
-
-5. **Fish Stock Management**:
-   - Full CRUD tracking fish species (Nile Tilapia, Pangasius Catfish, Whiteleg Shrimp, Asian Seabass), stocking quantity, stocking date, average weight ($g$), batch numbers, and auto-calculated biomass.
-
-6. **Daily Water Quality Logs & Rule-Based AI Engine**:
-   - Complete tracking for pH, Temperature (°C), Dissolved Oxygen ($mg/L$), Salinity ($ppt$), Ammonia ($mg/L$), Nitrite ($mg/L$).
-   - **Automated AI Diagnostic Rules**:
-     - **Low Dissolved Oxygen (< 5.0 mg/L)**: `CRITICAL ALERT` - Trigger aerators immediately, reduce feed by 50%.
-     - **High Ammonia (> 0.05 mg/L)**: `WARNING` - Execute 25% water replacement, apply bio-probiotics, halt feeding.
-     - **Abnormal pH (< 6.5 or > 8.5)**: `ACTION NEEDED` - Apply agricultural lime ($CaCO_3$) for low pH or partial water renewal for high pH.
-     - **Temperature Extreme (< 22°C or > 32°C)**: `STRESS ALERT` - Fish metabolic rate decreased; adjust feeding ration.
-   - Interactive modal diagnosis report for any individual water log entry.
-
-7. **Smart Feed Calculator & Feed Logs**:
-   - Computes daily feed requirements based on fish count, average weight, and feeding ration percentage:
-     $$\text{Daily Feed (kg)} = \frac{\text{Fish Count} \times \text{Avg Weight (g)}}{1000} \times \left(\frac{\text{Feed Rate \%}}{100}\right)$$
-   - Breaks down daily ration into Morning (40%), Afternoon (30%), and Evening (30%) feedings.
-
-8. **Disease & Health Management**:
-   - Track disease names, symptoms, treatments administered, observation dates, resolution status, and photo attachments with preview modal.
-
-9. **Harvest & Financial Management**:
-   - Log harvest date, harvested weight ($kg$), selling price per kg ($), gross revenue ($), total expenses ($), net profit ($), and buyer details.
-
-10. **Reports & Data Export**:
-    - Filterable summaries (Consolidated, Water Quality, Financial Yields).
-    - One-click CSV Export functionality for water quality logs and printable report layouts.
-
-11. **Responsive UI & Dark/Light Mode**:
-    - Modern glassmorphic and clean oceanic aesthetic with custom CSS variables.
-    - Persistent Light/Dark theme switcher.
-    - Mobile-first collapsible sidebar navigation.
+It empowers users to evaluate suspicious messages, fake job offers, email phishing attempts, banking SMS alerts, investment schemes, and deceptive website links before taking risky actions.
 
 ---
 
-## 🚀 GitHub Pages & Firebase Deployment Guide
+## 🌟 Key Features
 
-### Option 1: Direct GitHub Pages Deployment (Demo Mode)
-1. Push this repository to GitHub.
-2. In your GitHub repo settings, navigate to **Pages** -> Select `main` branch -> Save.
-3. Your application is live immediately! The fallback store will populate realistic seed data for instant testing.
+1. **Interactive Scam Checker (Core Engine)**:
+   - Evaluates suspicious content across 7 categories: Job Offers, SMS/Chat, Phishing Email, Website URLs, Online Shopping, Investment Schemes, and Other Suspicious Content.
+   - Preset test samples ("Fake Job Offer", "Phishing Email", "Banking SMS", "Crypto Scam") for instant testing.
+   - Animated SVG Risk Gauge Meter presenting a normalized risk score from 0 to 100 with risk category badges (`Low Risk Indicators`, `Moderate Risk Indicators`, `High Risk Indicators`).
 
-### Option 2: Live Firebase Integration
-1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
-2. Enable **Authentication** (Email/Password method).
-3. Create a **Firestore Database** in production mode.
-4. Enable **Firebase Storage**.
-5. Copy your web app's configuration object and paste it into `js/firebase-config.js`:
-   ```javascript
-   window.firebaseConfig = {
-       apiKey: "YOUR_ACTUAL_API_KEY",
-       authDomain: "your-app.firebaseapp.com",
-       projectId: "your-app-id",
-       storageBucket: "your-app.appspot.com",
-       messagingSenderId: "1234567890",
-       appId: "1:1234567890:web:abcdef"
-   };
+2. **Contextual Rule & Structural Analysis Engine**:
+   - **Text Pattern Matching**: Multi-indicator weighted rules detecting upfront registration fees, confidential credential/OTP requests, extreme urgency threats, unofficial Telegram/WhatsApp contact demands, and video-like task schemes.
+   - **URL Structural Inspector**: Analyzes domain structure, raw IP address hosts, typosquatting brand lookalikes (`paypa1.com`, `g00gle.com`), high-risk TLDs (`.xyz`, `.top`, `.buzz`, `.click`), URL shorteners (`bit.ly`, `tinyurl`), multi-level subdomains, and missing HTTPS on sensitive pages.
+   - **Contextual Normalization**: Dampens false positive scores on benign single keywords.
+
+3. **Educational Awareness Hub**:
+   - Searchable learning center with real-time keyword search and category filters.
+   - Educational guides covering common scam tactics, common warning signs, **clearly labeled educational simulated examples**, step-by-step verification checklists, and protection tips.
+
+4. **Community Incident Reporting**:
+   - Privacy-focused submission form allowing users to submit suspicious incidents for research.
+   - Does NOT request or collect passwords, OTPs, bank details, or sensitive personal data.
+
+5. **User & Admin Dashboards**:
+   - **User Dashboard**: Personal scan history table, risk level distribution doughnut chart (Chart.js), and history item deletion.
+   - **Admin Panel**: Platform statistics (total users, total scans, total reports), top detected threat warning signs frequency bar chart (Chart.js), risk breakdown pie chart, and recent community incident reports oversight.
+
+6. **Cybersecurity Dark-Navy UI**:
+   - Premium glassmorphic interface with accessible contrast, responsive Bootstrap 5 grid layout, subtle hover effects, dynamic Bootstrap toast notifications, and loading indicators.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+), Bootstrap 5.3, Bootstrap Icons, Chart.js.
+- **Backend**: Python 3.13, Django 6.1, Django REST Framework (DRF).
+- **Analysis Engine**: Python-based rule engine, regex pattern matcher, URL parser, multi-factor risk scoring algorithm.
+- **Database**: SQLite (default zero-config setup) with MySQL support toggle.
+
+---
+
+## 🚀 Quick Start Guide
+
+### 1. Prerequisites
+Ensure Python 3.10+ is installed on your system.
+
+### 2. Run Database Migrations
+```bash
+python manage.py migrate
+```
+
+### 3. Seed Database with Educational Articles & Admin User
+Run the automated seed command to populate the database with educational guides, demo data, and administrator accounts:
+```bash
+python manage.py seed_scam_data
+```
+
+> **Default Demo Credentials:**
+> - **Admin User**: `admin` / Password: `admin123` (Access `/admin/` or `/admin-dashboard/`)
+> - **Demo User**: `demo_user` / Password: `demo123` (Access `/dashboard/`)
+
+### 4. Start Development Server
+```bash
+python manage.py runserver 8000
+```
+Open your browser and navigate to: **http://127.0.0.1:8000/**
+
+---
+
+## 🔄 Switching from SQLite to MySQL
+
+ScamShield supports both SQLite and MySQL databases. By default, it operates on SQLite for zero-configuration local execution.
+
+To switch to MySQL:
+
+1. **Install MySQL Connector**:
+   ```bash
+   pip install mysql-connector-python
    ```
-6. Deploy to GitHub Pages or any static hosting (Vercel, Netlify, Firebase Hosting).
+2. **Create MySQL Database**:
+   Log into your MySQL server and create a database:
+   ```sql
+   CREATE DATABASE scamshield_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+3. **Update Database Settings in `scamshield/settings.py`**:
+   Comment out the SQLite `DATABASES` dictionary and activate the MySQL configuration block:
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.mysql',
+           'NAME': 'scamshield_db',
+           'USER': 'root',               # Your MySQL Username
+           'PASSWORD': 'your_password',   # Your MySQL Password
+           'HOST': '127.0.0.1',
+           'PORT': '3306',
+           'OPTIONS': {
+               'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+           }
+       }
+   }
+   ```
+4. **Apply Migrations to MySQL**:
+   ```bash
+   python manage.py migrate
+   python manage.py seed_scam_data
+   ```
 
 ---
 
-## 🛠️ Tech Stack
+## 🧪 Running Automated Unit Tests
 
-- **Frontend**: HTML5, Vanilla CSS3 (Custom properties, Flexbox/Grid, Dark/Light mode, Glassmorphism), ES6 JavaScript Modules.
-- **Charts**: [Chart.js](https://www.chartjs.org/) via CDN.
-- **Icons**: [RemixIcon](https://remixicon.com/) via CDN.
-- **Cloud Backend**: Firebase Authentication, Firestore DB, Firebase Storage (with local fallback).
+Execute Django's unit test suite to verify validators, URL inspection rules, risk scoring algorithms, and API endpoints:
+```bash
+python manage.py test
+```
+
+---
+
+## 📡 REST API Documentation
+
+### 1. Analyze Content
+- **Endpoint**: `POST /api/analyze/`
+- **Payload**:
+  ```json
+  {
+    "text": "Pay $120 registration fee to receive remote laptop kit.",
+    "url": "http://global-jobs.xyz",
+    "category": "JOB_INTERNSHIP"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "risk_assessment": {
+      "risk_score": 85,
+      "risk_level": "HIGH",
+      "level_display": "High Risk Indicators",
+      "summary": "Critical scam warning signs detected! High probability of fraudulent content."
+    },
+    "indicators": [
+      {
+        "rule_id": "RULE_UPFRONT_FEE",
+        "name": "Advance Payment or Registration Fee Request",
+        "severity": "HIGH",
+        "weight": 35,
+        "explanation": "The content requests payment before providing a job...",
+        "recommendation": "Refuse to pay any advance fee."
+      }
+    ]
+  }
+  ```
+
+---
+
+## 📄 License & Disclaimer
+
+*Disclaimer: Automated analysis provided by ScamShield consists of informational risk indicators based on pattern detection algorithms, not absolute proof of fraud or safety. Users must verify important information independently through official channels.*

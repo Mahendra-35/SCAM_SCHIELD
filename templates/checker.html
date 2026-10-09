@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Scam Risk Checker — ScamShield{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <!-- Title Header -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-white mb-2">
+                    <i class="bi bi-shield-check text-cyan me-2"></i> Online Scam Risk Checker
+                </h2>
+                <p class="text-secondary">
+                    Paste suspicious messages, emails, job offers, or web links below for instant threat pattern analysis.
+                </p>
+            </div>
+
+            <!-- Preset Sample Buttons -->
+            <div class="glass-card p-3 mb-4 text-center">
+                <span class="small text-muted d-block mb-2 font-monospace">QUICK TEST WITH SAMPLE SCAMS:</span>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <button type="button" class="btn btn-sm btn-outline-info btn-sample" data-sample="JOB">
+                        <i class="bi bi-briefcase me-1"></i> Fake Job Offer
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-warning btn-sample" data-sample="PHISHING">
+                        <i class="bi bi-envelope-exclamation me-1"></i> Phishing Email
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-sample" data-sample="BANKING">
+                        <i class="bi bi-bank2 me-1"></i> Banking SMS OTP
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-success btn-sample" data-sample="INVESTMENT">
+                        <i class="bi bi-graph-up-arrow me-1"></i> Crypto Profit Scam
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Form Card -->
+            <div class="glass-card p-4 mb-5">
+                <form id="scamCheckerForm">
+                    <!-- Category Selector -->
+                    <div class="mb-3">
+                        <label for="categorySelect" class="form-label text-white fw-bold">Select Content Category</label>
+                        <select class="form-select form-cyber" id="categorySelect">
+                            <option value="JOB_INTERNSHIP">Job or Internship Offer</option>
+                            <option value="SMS_CHAT">SMS or Chat Message</option>
+                            <option value="EMAIL_PHISHING">Email Phishing</option>
+                            <option value="WEBSITE_URL">Website URL / Domain Analysis</option>
+                            <option value="SHOPPING_OFFER">Online Shopping Offer</option>
+                            <option value="INVESTMENT_SCHEME">Investment or Money-Making Scheme</option>
+                            <option value="OTHER" selected>Other Suspicious Content</option>
+                        </select>
+                    </div>
+
+                    <!-- Text Area Input -->
+                    <div class="mb-3">
+                        <label for="messageInput" class="form-label text-white fw-bold">Message Content or Offer Text</label>
+                        <textarea class="form-control form-cyber" id="messageInput" rows="5" placeholder="Paste the message, email text, SMS body, or job offer here..."></textarea>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div class="mb-4" id="urlInputGroup">
+                        <label for="urlInput" class="form-label text-white fw-bold">Suspicious Website Link (Optional / Dedicated for URL Analysis)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-cyan"><i class="bi bi-link-45deg"></i></span>
+                            <input type="text" class="form-control form-cyber" id="urlInput" placeholder="e.g. paypa1-security-verify.xyz or http://192.168.1.1/login">
+                        </div>
+                    </div>
+
+                    <!-- Form Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="clearBtn">
+                            <i class="bi bi-eraser me-1"></i> Clear Input
+                        </button>
+                        <button type="submit" class="btn btn-cyber-primary" id="analyzeBtn">
+                            <i class="bi bi-cpu me-2"></i> Analyze for Scam Signs
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div id="loadingState" class="text-center py-5 d-none">
+                <div class="spinner-border text-cyan mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+                <h5 class="text-white fw-bold">Analyzing Pattern Rules & Domain Integrity...</h5>
+                <p class="text-secondary small">Evaluating contextual indicators, URL structure, and risk weightings</p>
+            </div>
+
+            <!-- Results Dashboard Panel -->
+            <div id="resultsPanel" class="d-none">
+                <div class="glass-card p-4 mb-4 border-cyan">
+                    <div class="row align-items-center">
+                        <!-- Left: Circular Risk Gauge -->
+                        <div class="col-md-4 text-center border-end-md border-secondary py-3">
+                            <span class="small text-muted font-monospace text-uppercase d-block mb-2">Calculated Risk Score</span>
+                            <div class="gauge-container mb-3">
+                                <svg width="180" height="180" viewBox="0 0 180 180" style="transform: rotate(-90deg);">
+                                    <circle cx="90" cy="90" r="80" stroke="rgba(255,255,255,0.08)" stroke-width="12" fill="none" />
+                                    <circle id="gaugeCircle" cx="90" cy="90" r="80" stroke="#00b4d8" stroke-width="12" fill="none" 
+                                            stroke-dasharray="502" stroke-dashoffset="502" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;" />
+                                </svg>
+                                <div class="gauge-score text-white">
+                                    <span id="resScoreVal">0</span><span class="fs-6 text-muted">/100</span>
+                                </div>
+                            </div>
+                            <span id="resLevelBadge" class="badge badge-risk-low fs-6">Low Risk Indicators</span>
+                        </div>
+
+                        <!-- Right: Risk Summary & Key Insight -->
+                        <div class="col-md-8 ps-md-4 py-3">
+                            <h4 class="text-white fw-bold mb-2">Analysis Overview</h4>
+                            <p id="resLevelSummary" class="text-secondary mb-3">
+                                Analysis completed. Summary of matched patterns listed below.
+                            </p>
+                            <div class="alert alert-dark border-secondary text-secondary small mb-0">
+                                <i class="bi bi-info-circle text-cyan me-1"></i>
+                                <strong>Disclaimer:</strong> This automated risk assessment provides pattern-matching indicators, not absolute proof of fraud or safety. Verify crucial actions independently.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Matched Warning Signs Card -->
+                <div class="glass-card p-4 mb-4">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center">
+                        <i class="bi bi-exclamation-octagon-fill text-warning me-2"></i> Matched Threat & Warning Indicators
+                    </h5>
+                    <div id="resIndicatorsList">
+                        <!-- Dynamic Matched Indicators render here -->
+                    </div>
+                </div>
+
+                <!-- Safe Next Actions List -->
+                <div class="glass-card p-4 mb-4">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center">
+                        <i class="bi bi-shield-check text-cyan me-2"></i> Recommended Safe Next Actions
+                    </h5>
+                    <ul id="resRecommendationsList" class="list-unstyled mb-0">
+                        <!-- Dynamic Recommendations render here -->
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <a href="#scamCheckerForm" class="btn btn-cyber-outline">
+                        <i class="bi bi-arrow-repeat me-1"></i> Analyze Another Message
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/analyzer.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Oversight Dashboard — ScamShield{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-white mb-1">
+                <i class="bi bi-gear-wide-connected text-warning me-2"></i> System Administration Dashboard
+            </h2>
+            <p class="text-secondary mb-0">Platform performance metrics, user counts, warning sign trends, and reported incidents.</p>
+        </div>
+        <span class="badge bg-warning text-dark px-3 py-2 font-monospace">STAFF AUTHORIZED</span>
+    </div>
+
+    <!-- Admin KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center border-cyan">
+                <h3 class="text-cyan fw-bold mb-0">{{ total_users }}</h3>
+                <span class="small text-muted">Registered Users</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center border-info">
+                <h3 class="text-info fw-bold mb-0">{{ total_scans }}</h3>
+                <span class="small text-muted">System Analyses</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center border-warning">
+                <h3 class="text-warning fw-bold mb-0">{{ total_reports }}</h3>
+                <span class="small text-muted">Incident Reports</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center border-danger">
+                <h3 class="text-danger fw-bold mb-0">{{ risk_stats.high }}</h3>
+                <span class="small text-muted">High Risk Threats Caught</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Charts Row -->
+    <div class="row g-4 mb-5">
+        <!-- Top Warning Signs Bar Chart -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100">
+                <h5 class="text-white fw-bold mb-3">Top Detected Threat Warning Signs</h5>
+                <canvas id="adminTopIndicatorsChart" height="220"></canvas>
+            </div>
+        </div>
+
+        <!-- Overall Risk Distribution Pie Chart -->
+        <div class="col-lg-5">
+            <div class="glass-card p-4 h-100 text-center">
+                <h5 class="text-white fw-bold mb-3">Platform Risk Breakdown</h5>
+                <div style="max-width: 280px; margin: 0 auto;">
+                    <canvas id="adminRiskPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Incident Reports Table -->
+    <div class="glass-card p-4 mb-4">
+        <h5 class="text-white fw-bold mb-3">Recent Community Incident Reports</h5>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0" style="background: transparent;">
+                <thead>
+                    <tr class="text-secondary border-secondary small">
+                        <th>Report ID</th>
+                        <th>Category</th>
+                        <th>Submitted Description</th>
+                        <th>Suspicious Link</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in recent_reports %}
+                        <tr>
+                            <td class="font-monospace text-cyan">#REP-{{ report.id }}</td>
+                            <td>
+                                <span class="badge bg-dark text-warning border border-warning">
+                                    {{ report.get_category_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="small text-secondary font-monospace d-inline-block text-truncate" style="max-width: 300px;">
+                                    {{ report.description }}
+                                </span>
+                            </td>
+                            <td class="small font-monospace text-info">
+                                {{ report.suspicious_url|default:"None Provided" }}
+                            </td>
+                            <td class="small text-muted">{{ report.created_at|date:"M d, Y" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No incident reports submitted yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/charts.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const riskData = {
+        low: {{ risk_stats.low }},
+        moderate: {{ risk_stats.moderate }},
+        high: {{ risk_stats.high }}
+    };
+    const topIndicators = JSON.parse('{{ top_indicators_json|escapejs }}');
+    initAdminDashboardCharts(riskData, topIndicators);
+});
+</script>
+{% endblock %}

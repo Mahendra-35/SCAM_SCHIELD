@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}About ScamShield — Capstone Project{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="glass-card p-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-shield-lock-fill text-cyan display-1 d-block mb-2"></i>
+                    <h2 class="fw-bold text-white mb-2">About ScamShield</h2>
+                    <span class="badge bg-dark text-cyan border border-cyan px-3 py-2">
+                        Final Year B.Tech Computer Science & Engineering Project
+                    </span>
+                </div>
+
+                <p class="text-secondary leading-relaxed mb-4">
+                    ScamShield is a full-stack cybersecurity web application designed to protect internet users from digital scams, job fraud, phishing attempts, banking impersonation, and deceptive URLs.
+                </p>
+
+                <h5 class="text-white fw-bold mb-3">Key Technical Innovations</h5>
+                <ul class="text-secondary small mb-4">
+                    <li class="mb-2"><strong>Contextual Weighted Rule Engine:</strong> Multi-factor rule evaluation preventing false alarms on isolated keywords.</li>
+                    <li class="mb-2"><strong>URL Structural Inspector:</strong> Identifies raw IP hosts, typosquatting brand variations, high-risk TLDs, and URL shorteners.</li>
+                    <li class="mb-2"><strong>Transparent Risk Meter:</strong> Maps detection scores into Low, Moderate, and High Risk indicators with safe next actions.</li>
+                    <li class="mb-2"><strong>Dual Database Support:</strong> Operates seamlessly on SQLite for local zero-config testing with instant toggle to MySQL production schema.</li>
+                </ul>
+
+                <h5 class="text-white fw-bold mb-3">Technology Stack</h5>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-dark text-white border border-secondary p-2">Python 3.13</span>
+                    <span class="badge bg-dark text-white border border-secondary p-2">Django 6.1</span>
+                    <span class="badge bg-dark text-white border border-secondary p-2">Django REST Framework</span>
+                    <span class="badge bg-dark text-white border border-secondary p-2">MySQL / SQLite</span>
+                    <span class="badge bg-dark text-white border border-secondary p-2">Bootstrap 5</span>
+                    <span class="badge bg-dark text-white border border-secondary p-2">Chart.js</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

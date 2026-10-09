@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Dashboard — ScamShield{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h2 class="fw-bold text-white mb-1">
+                <i class="bi bi-speedometer2 text-cyan me-2"></i> Welcome, {{ user.username }}
+            </h2>
+            <p class="text-secondary mb-0">Your personal scam analysis history and risk distribution metrics.</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{% url 'checker' %}" class="btn btn-cyber-primary">
+                <i class="bi bi-plus-circle me-1"></i> New Scam Check
+            </a>
+        </div>
+    </div>
+
+    <!-- User KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center">
+                <h3 class="text-cyan fw-bold mb-0">{{ total_scans }}</h3>
+                <span class="small text-muted">Total Analyses</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center">
+                <h3 class="text-success fw-bold mb-0">{{ low_count }}</h3>
+                <span class="small text-muted">Low Risk Scans</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center">
+                <h3 class="text-warning fw-bold mb-0">{{ mod_count }}</h3>
+                <span class="small text-muted">Moderate Risk Scans</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="glass-card p-3 text-center">
+                <h3 class="text-danger fw-bold mb-0">{{ high_count }}</h3>
+                <span class="small text-muted">High Risk Warnings</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Risk Distribution Chart Card -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 h-100 text-center">
+                <h5 class="text-white fw-bold mb-3">Risk Distribution</h5>
+                <div style="max-width: 250px; margin: 0 auto;">
+                    <canvas id="userRiskChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Analysis History Table -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 h-100">
+                <h5 class="text-white fw-bold mb-3">Recent Analysis History</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0" style="background: transparent;">
+                        <thead>
+                            <tr class="text-secondary border-secondary small">
+                                <th>Category</th>
+                                <th>Content Preview</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for scan in scans %}
+                                <tr id="row-scan-{{ scan.id }}">
+                                    <td>
+                                        <span class="badge bg-dark text-cyan border border-cyan">
+                                            {{ scan.get_category_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="small text-secondary font-monospace d-inline-block text-truncate" style="max-width: 200px;">
+                                            {{ scan.input_snippet }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if scan.risk_level == 'HIGH' %}
+                                            <span class="badge badge-risk-high">{{ scan.risk_score }} / 100</span>
+                                        {% elif scan.risk_level == 'MODERATE' %}
+                                            <span class="badge badge-risk-moderate">{{ scan.risk_score }} / 100</span>
+                                        {% else %}
+                                            <span class="badge badge-risk-low">{{ scan.risk_score }} / 100</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="small text-muted">
+                                        {{ scan.created_at|date:"M d, Y" }}
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-danger btn-delete-scan" data-id="{{ scan.id }}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        No analysis history found. Perform a scan to view your records here!
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/charts.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Chart
+    initUserDashboardCharts({{ low_count }}, {{ mod_count }}, {{ high_count }});
+
+    // Handle History Deletion
+    document.querySelectorAll('.btn-delete-scan').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const scanId = btn.getAttribute('data-id');
+            if (!confirm('Are you sure you want to delete this scan record from your history?')) return;
+
+            try {
+                const response = await fetch(`/api/history/${scanId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                });
+
+                if (response.ok) {
+                    const row = document.getElementById(`row-scan-${scanId}`);
+                    if (row) row.remove();
+                    showToast('Record deleted successfully.', 'success');
+                } else {
+                    showToast('Failed to delete record.', 'danger');
+                }
+            } catch (err) {
+                showToast('Error deleting record.', 'danger');
+            }
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %}

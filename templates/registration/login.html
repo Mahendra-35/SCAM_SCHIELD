@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Login — ScamShield{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="glass-card p-4">
+                <div class="text-center mb-4">
+                    <i class="bi bi-shield-lock-fill text-cyan fs-1 d-block mb-2"></i>
+                    <h3 class="fw-bold text-white mb-1">Account Login</h3>
+                    <p class="text-secondary small">Access your personal scam analysis history & dashboard</p>
+                </div>
+
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label text-white fw-bold">Username</label>
+                        <input type="text" name="username" class="form-control form-cyber" id="id_username" required autofocus>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_password" class="form-label text-white fw-bold">Password</label>
+                        <input type="password" name="password" class="form-control form-cyber" id="id_password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-cyber-primary w-100 mb-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Log In
+                    </button>
+                </form>
+
+                <div class="text-center border-top border-secondary pt-3">
+                    <span class="text-muted small">Don't have an account yet?</span>
+                    <a href="{% url 'register' %}" class="text-cyan text-decoration-none small ms-1">Create Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

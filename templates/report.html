@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Report a Scam Incident — ScamShield{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-white mb-2">
+                    <i class="bi bi-flag-fill text-cyan me-2"></i> Submit Scam Incident Report
+                </h2>
+                <p class="text-secondary">
+                    Help train our cybersecurity awareness system and protect the community by submitting details of suspicious messages or fraudulent URLs you encountered.
+                </p>
+            </div>
+
+            <!-- Privacy Guarantee Alert -->
+            <div class="glass-card p-3 mb-4 border-info">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-lock text-cyan fs-3 me-3"></i>
+                    <div class="small">
+                        <strong class="text-white">Privacy Notice & Safety Commitment:</strong>
+                        <span class="text-secondary d-block">
+                            Do NOT submit passwords, OTPs, bank account numbers, credit card details, or personal identity numbers. Submitted reports are used strictly for educational research and threat pattern analysis.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Submission Form Card -->
+            <div class="glass-card p-4">
+                <form method="POST" action="{% url 'report_incident' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="category" class="form-label text-white fw-bold">Scam Category</label>
+                        <select name="category" class="form-select form-cyber" required>
+                            <option value="JOB_INTERNSHIP" {% if category == 'JOB_INTERNSHIP' %}selected{% endif %}>Job or Internship Scam</option>
+                            <option value="PHISHING_EMAIL" {% if category == 'PHISHING_EMAIL' %}selected{% endif %}>Phishing & Email Scam</option>
+                            <option value="BANKING_OTP" {% if category == 'BANKING_OTP' %}selected{% endif %}>OTP & Banking Impersonation</option>
+                            <option value="FAKE_SHOPPING" {% if category == 'FAKE_SHOPPING' %}selected{% endif %}>Fake Shopping Website</option>
+                            <option value="INVESTMENT_CRYPTO" {% if category == 'INVESTMENT_CRYPTO' %}selected{% endif %}>Investment & Crypto Scheme</option>
+                            <option value="WFH_TASK" {% if category == 'WFH_TASK' %}selected{% endif %}>Work-From-Home Task Scam</option>
+                            <option value="SOCIAL_LOTTERY" {% if category == 'SOCIAL_LOTTERY' %}selected{% endif %}>Social Media & Prize Scam</option>
+                            <option value="OTHER" {% if category == 'OTHER' or not category %}selected{% endif %}>Other Suspicious Incident</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label text-white fw-bold">Incident Description / Suspicious Message Content</label>
+                        <textarea name="description" class="form-control form-cyber" rows="5" placeholder="Describe the message, email, or offer. Include what the scammer claimed or requested (e.g. upfront fee, Telegram contact)..." required>{{ description }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="suspicious_url" class="form-label text-white fw-bold">Suspicious URL / Website Link (Optional)</label>
+                        <input type="text" name="suspicious_url" class="form-control form-cyber" placeholder="e.g. http://suspicious-domain.xyz" value="{{ suspicious_url }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="explanation" class="form-label text-white fw-bold">How You Encountered It / Additional Context (Optional)</label>
+                        <textarea name="explanation" class="form-control form-cyber" rows="3" placeholder="e.g. Received via WhatsApp from an unknown number posing as HR manager...">{{ explanation }}</textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-cyber-primary">
+                            <i class="bi bi-send me-2"></i> Submit Incident Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
