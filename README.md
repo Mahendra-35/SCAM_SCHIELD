@@ -4,7 +4,7 @@ An online scam awareness and risk-checking platform built with Django.
 
 ## 🚀 Live Demo
 
-[Click here to visit ScamShield](https://your-actual-render-url.onrender.com)
+[Click here to visit ScamShield](https://scam-schield.onrender.com/)
 
 ## 🛠️ Technologies Used
 
