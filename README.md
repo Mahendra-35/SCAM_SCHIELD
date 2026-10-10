@@ -1,3 +1,21 @@
+# ScamShield 🛡️
+
+An online scam awareness and risk-checking platform built with Django.
+
+## 🚀 Live Demo
+
+[Click here to visit ScamShield](https://your-actual-render-url.onrender.com)
+
+## 🛠️ Technologies Used
+
+* Python
+* Django
+* Django REST Framework
+* HTML, CSS, JavaScript
+* SQLite
+* Render (Deployment)
+
+
 # 🛡️ ScamShield — Online Scam Awareness & Risk Checker
 
 **ScamShield** is a production-ready, full-stack cybersecurity web application built for online scam awareness, digital threat detection, and automated risk checking.
